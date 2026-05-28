@@ -276,8 +276,8 @@
       mix-blend-mode: overlay;
       opacity: 0;
       animation: shimmerSweep 5s ease-in-out infinite;
-      -webkit-mask-image: var(--phoenix-mask, none);
-              mask-image: var(--phoenix-mask, none);
+      -webkit-mask: url('assets/phoenix.png') center / contain no-repeat;
+              mask: url('assets/phoenix.png') center / contain no-repeat;
     }
     @keyframes shimmerSweep {
       0%   { background-position: 100% 0; opacity: 0; }
@@ -1001,6 +1001,17 @@
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Failsafe: ensure reveal items become visible even if IO never fires
+    // (e.g. headless rendering, reduced-motion users, or in-view at load)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+          const r = el.getBoundingClientRect();
+          if (r.top < window.innerHeight) el.classList.add('in');
+        });
+      }, 400);
+    });
 
     // — Parallax phoenix on mouse move (subtle) —
     const phoenix = document.querySelector('.phoenix-wrap');
