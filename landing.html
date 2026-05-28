@@ -261,6 +261,39 @@
       50%     { opacity: .7; }
     }
 
+    /* Shimmer sweep across the PNG */
+    .phoenix-shimmer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg,
+        transparent 30%,
+        rgba(255,224,154,.35) 48%,
+        rgba(255,255,255,.5) 50%,
+        rgba(255,224,154,.35) 52%,
+        transparent 70%);
+      background-size: 250% 250%;
+      mix-blend-mode: overlay;
+      opacity: 0;
+      animation: shimmerSweep 5s ease-in-out infinite;
+      -webkit-mask-image: var(--phoenix-mask, none);
+              mask-image: var(--phoenix-mask, none);
+    }
+    @keyframes shimmerSweep {
+      0%   { background-position: 100% 0; opacity: 0; }
+      40%  { opacity: .8; }
+      60%  { opacity: .8; }
+      100% { background-position: -50% 0; opacity: 0; }
+    }
+
+    /* PNG-specific tweaks */
+    .phoenix-img {
+      display: block;
+      filter:
+        drop-shadow(0 20px 60px rgba(255,61,46,.45))
+        drop-shadow(0 0 30px rgba(192,36,154,.25));
+    }
+
     /* — Embers — */
     .embers {
       position: absolute;
@@ -676,8 +709,13 @@
       <div class="phoenix-wrap">
         <div class="phoenix-glow"></div>
 
-        <!-- ====== PHOENIX SVG ====== -->
-        <svg class="phoenix-svg" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- ====== PHOENIX IMAGE ====== -->
+        <img class="phoenix-svg phoenix-img" src="assets/phoenix.png" alt="Fenix Holdco phoenix"
+             onerror="this.style.display='none'; document.getElementById('phoenix-fallback').style.display='block';" />
+        <div class="phoenix-shimmer"></div>
+
+        <!-- Fallback SVG, only shown if PNG missing -->
+        <svg id="phoenix-fallback" class="phoenix-svg" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg" style="display:none;">
           <defs>
             <!-- Wing gradients -->
             <linearGradient id="wingTop" x1="0%" y1="0%" x2="100%" y2="100%">
